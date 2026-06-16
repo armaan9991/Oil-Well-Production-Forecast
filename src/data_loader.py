@@ -143,6 +143,19 @@ def load(path : str = RAW_PATH,sheet_name : int =0) -> pd.DataFrame:
         print(f"\n      Columns with nulls ({len(cols_with_nulls)}):")
         print(cols_with_nulls.to_string())
 
+    print(f"\n acions that can be taken:")
+    for col,row in cols_with_nulls.iterrows():
+        pct = row['null_pct']
+        if pct > 60:
+            action = "can be dropped"
+        elif pct > 30:
+            action = "can be dropped, but check if it matters for model"
+        elif col in ['AVG_DOWNHOLE_PRESSURE', 'AVG_WHP_P', 'AVG_CHOKE_SIZE_P']:
+            action = "sensor fault."
+        else:
+            action = "liner interpolate"
+        print(f"\n {col:<35} {pct:>5.1f}% -> {action}")
+
 if __name__ == '__main__':
     path = sys.argv[1] if len(sys.argv)>1 else RAW_PATH
 
