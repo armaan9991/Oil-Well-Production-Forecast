@@ -55,6 +55,17 @@ def load(path : str = RAW_PATH,sheet_name : int =0) -> pd.DataFrame:
         df = df.sort_values('DATEPRD').reset_index(drop=True)
         print(f"Date range: {df['DATEPRD'].min().date()} → {df['DATEPRD'].max().date()}")
 
+    ## force Numerical cols to float
+    numeric_cols = [
+        'ON_STREAM_HRS','AVG_DOWNHOLE_PRESSURE','AVG_DOWNHOLE_TEMPERATURE','AVG_DP_TUBING', 'AVG_ANNULUS_PRESS', 'AVG_CHOKE_SIZE_P',
+        'AVG_WHP_P', 'AVG_WHT_P','DP_CHOKE_SIZE','BORE_OIL_VOL', 'BORE_GAS_VOL' , 'BORE_WAT_VOL','BORE_WI_VOL'
+    ]
+
+    for col in numeric_cols:
+        if col in df.columns:
+            df[col] = pd.to_numeric(df[col],errors='coerce')           ## 'coerce' means if invalid value means :NaN
+            
+
 if __name__ == '__main__':
     path = sys.argv[1] if len(sys.argv)>1 else RAW_PATH
 
