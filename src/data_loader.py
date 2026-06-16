@@ -128,6 +128,13 @@ def load(path : str = RAW_PATH,sheet_name : int =0) -> pd.DataFrame:
         df['DAYS_ON_PROD'] = df.groupby('NPD_WELL_BORE_NAME')['DATEPRD'].transform(lambda x:(x-x.min()).dt.days)
         print(f"  DAYS_ON_PROD   = days since first production)")
 
+    print(f"\n\tnull Audit")
+    null_audit = pd.DataFrame({
+        'null_count' : df.isnull().sum(),
+        'null_pct':(df.isnull().sum() /len(df) * 100).round(1),
+        'dtype' : df.dtypes
+    }).sort_values('null_pct',ascending=False)
+    
 if __name__ == '__main__':
     path = sys.argv[1] if len(sys.argv)>1 else RAW_PATH
 
