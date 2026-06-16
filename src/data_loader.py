@@ -79,7 +79,13 @@ def load(path : str = RAW_PATH,sheet_name : int =0) -> pd.DataFrame:
     else:
         print(f"\n FLOW_KIND column is missingg.")
     
-
+    ## drop rows when well was off(means ON_STREAM_HRS =0)
+    if 'ON_STREAM_HRS' in df.columns:
+        before = len(df)
+        df = df[df['ON_STREAM_HRS'] >0 ].copy()
+        print(f" Dropped {before - len(df):,} rows where well was shut.")
+    else:
+        print(f"\n ON_STREAM_HRS column is missingg.")
 if __name__ == '__main__':
     path = sys.argv[1] if len(sys.argv)>1 else RAW_PATH
 
