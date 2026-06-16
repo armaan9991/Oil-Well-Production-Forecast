@@ -103,9 +103,19 @@ def load(path : str = RAW_PATH,sheet_name : int =0) -> pd.DataFrame:
         df['OIL_RATE_NORM']= df['BORE_OIL_VOL'] / df['ON_STREM_HRS'] * 24
         print(f"OIL_RATE NORM = BORE_OIL_VOL / ON_STREM_HRS * 24")
     
+    ## High GOR states depletion on reserviour
+
     if 'BORE_GAS_VOL' in df.columns and 'BORE_OIL_VOL' in df.columns:
         df['GOR'] = df['BORE_GAS_VOL'] / df['BORE_OIL_VOL'].replace(0, np.nan)
         print(f"\nGOR = BORE_GAS_VOL / BORE_OIL_VOL")
+
+
+    ## Water
+    if 'BORE_WAT_VOL' in df.columns and 'BORE_OIL_VOL' in df.columns:
+        total_liq = df['BORE_OIL_VAL'] + df['BORE_WAT_VOL']
+        df['WCT'] = df['BORE_WAT_VOL'] / total_liq.replace(0,np.nan)
+        print(f"Water cut: BORE_WAT_VOL /(BORE_OIL_VOL + BORE_WAT_VOL)")
+        
 
 if __name__ == '__main__':
     path = sys.argv[1] if len(sys.argv)>1 else RAW_PATH
