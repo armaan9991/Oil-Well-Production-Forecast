@@ -3,7 +3,7 @@ import  numpy as np
 import sys
 import os
 RAW_PATH = '../data/raw/Volve_production_data.xlsx'
-OUTPUT_PARQUET = 'data/processed/cleaned.parquet'
+OUTPUT_PARQUET = '../data/processed/cleaned.parquet'
 
 # DATEPRD  = DAte of Production
 # NPD_WELL_BORE_NAME = Well Identifier
