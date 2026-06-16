@@ -35,7 +35,7 @@ def check_excel(path:str) -> None:
 
 
 def load(path : str = RAW_PATH,sheet_name : int =0) -> pd.DataFrame:
-    print("STEP 1: Reading Excel File")
+    print("\nSTEP 1: Reading Excel File")
     df = pd.read_excel(path,sheet_name=sheet_name)
     # row and col, basiclly shape of data
     print(f"SHAPE OF DATE {df.shape[0]:,} rows {df.shape[1]} cols")
@@ -74,7 +74,7 @@ def load(path : str = RAW_PATH,sheet_name : int =0) -> pd.DataFrame:
     print("\n Filter Production ROW")
     if 'FLOW_KIND' in df.columns:
         counts = df['FLOW_KIND'].value_counts()
-        print(f"Flow Kind : \n{counts.to_string()}")
+        print(f"Flow Kind : {counts.to_string()}")
         df =df[df['FLOW_KIND'].str.upper().str.strip() == 'PRODUCTION'].copy()
         print(f"\n Production row count: {len(df):,} rows")
     else:
@@ -102,7 +102,7 @@ def load(path : str = RAW_PATH,sheet_name : int =0) -> pd.DataFrame:
     
     if  'BORE_OIL_VOL' in df.columns and 'ON_STREAM_HRS' in df.columns:
         df['OIL_RATE_NORM']= df['BORE_OIL_VOL'] / df['ON_STREAM_HRS'] * 24
-        print(f"OIL_RATE NORM = BORE_OIL_VOL / ON_STREAM_HRS * 24")
+        print(f"\nOIL_RATE NORM = BORE_OIL_VOL / ON_STREAM_HRS * 24")
     
     ## High GOR states depletion on reserviour
 
@@ -136,7 +136,7 @@ def load(path : str = RAW_PATH,sheet_name : int =0) -> pd.DataFrame:
         'dtype' : df.dtypes
     }).sort_values('null_pct',ascending=False)
 
-    cols_with_nulls = null_audit[null_audit['null_count'] > 0]
+    cols_with_nulls = null_audit[null_audit['null_count'] > 0]        ## keep rows that only have null count > 0
 
     if len(cols_with_nulls) == 0:
         print(f"\n No null remaining")
@@ -163,7 +163,7 @@ def load(path : str = RAW_PATH,sheet_name : int =0) -> pd.DataFrame:
         print(f"      Wells: {df['NPD_WELL_BORE_NAME'].nunique()}")
         for well, grp in df.groupby('NPD_WELL_BORE_NAME'):
             print(f"        {well:<20} {len(grp):>5} rows  "
-                  f"oil avg: {grp['BORE_OIL_VOL'].mean():.1f} Sm³/day")
+                  f"oil avg: {grp['BORE_OIL_VOL'].mean():.1f} Sm³/day")      ## get average production and number of number of rows of well.
 
     os.makedirs(os.path.dirname(OUTPUT_PARQUET), exist_ok=True)
     df.to_parquet(OUTPUT_PARQUET,index=False)
