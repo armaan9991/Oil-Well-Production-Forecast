@@ -2,7 +2,7 @@ import pandas as pd
 import  numpy as np
 import sys
 import os
-RAW_PATH = 'data/raw/data/Volve_production_data.xlsx'
+RAW_PATH = '../data/raw/Volve_production_data.xlsx'
 OUTPUT_PARQUET = 'data/processed/cleaned.parquet'
 
 # DATEPRD  = DAte of Production
@@ -91,7 +91,7 @@ def load(path : str = RAW_PATH,sheet_name : int =0) -> pd.DataFrame:
     ## drop rows when well was off(means ON_STREAM_HRS =0)
     if 'BORE_OIL_VOL' in df.columns:
         before = len(df)
-        df= df[df['BORE_OIL_VOL'].notna].copy()
+        df= df[df['BORE_OIL_VOL'].notna()].copy()
         print(f"\n dropped {before - len(df):,} rows where BORE_OIL_VAL is null")
     else:
         print(f"\n BORE_OIL_VAL column is missingg.")
@@ -100,9 +100,9 @@ def load(path : str = RAW_PATH,sheet_name : int =0) -> pd.DataFrame:
     print(f"\n Normailizinf features.")
     print(f"normailizing oil Production to whole day.")
     
-    if  'BORE_OIL_VOL' in df.columns and 'ON_STREM_HRS' in df.columns:
-        df['OIL_RATE_NORM']= df['BORE_OIL_VOL'] / df['ON_STREM_HRS'] * 24
-        print(f"OIL_RATE NORM = BORE_OIL_VOL / ON_STREM_HRS * 24")
+    if  'BORE_OIL_VOL' in df.columns and 'ON_STREAM_HRS' in df.columns:
+        df['OIL_RATE_NORM']= df['BORE_OIL_VOL'] / df['ON_STREAM_HRS'] * 24
+        print(f"OIL_RATE NORM = BORE_OIL_VOL / ON_STREAM_HRS * 24")
     
     ## High GOR states depletion on reserviour
 
@@ -113,7 +113,7 @@ def load(path : str = RAW_PATH,sheet_name : int =0) -> pd.DataFrame:
 
     ## Water
     if 'BORE_WAT_VOL' in df.columns and 'BORE_OIL_VOL' in df.columns:
-        total_liq = df['BORE_OIL_VAL'] + df['BORE_WAT_VOL']
+        total_liq = df['BORE_OIL_VOL'] + df['BORE_WAT_VOL']
         df['WCT'] = df['BORE_WAT_VOL'] / total_liq.replace(0,np.nan)
         print(f"Water cut: BORE_WAT_VOL /(BORE_OIL_VOL + BORE_WAT_VOL)")
 
@@ -183,3 +183,8 @@ if __name__ == '__main__':
     check_excel(path)
 
     df = load(path)
+
+    print(f"\n{'='*60}")
+    print("Done. df is ready for EDA.")
+    print(f"{'='*60}\n")
+ 
