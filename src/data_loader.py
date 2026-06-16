@@ -86,6 +86,15 @@ def load(path : str = RAW_PATH,sheet_name : int =0) -> pd.DataFrame:
         print(f" Dropped {before - len(df):,} rows where well was shut.")
     else:
         print(f"\n ON_STREAM_HRS column is missingg.")
+
+    ## drop rows when well was off(means ON_STREAM_HRS =0)
+    if 'BORE_OIL_VOL' in df.columns:
+        before = len(df)
+        df= df[df['BORE_OIL_VOL'].notna].copy()
+        print(f"\n dropped {before - len(df):,} rows where BORE_OIL_VAL is null")
+    else:
+        print(f"\n BORE_OIL_VAL column is missingg.")
+
 if __name__ == '__main__':
     path = sys.argv[1] if len(sys.argv)>1 else RAW_PATH
 
