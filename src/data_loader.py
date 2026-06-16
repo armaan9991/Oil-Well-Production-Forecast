@@ -134,7 +134,15 @@ def load(path : str = RAW_PATH,sheet_name : int =0) -> pd.DataFrame:
         'null_pct':(df.isnull().sum() /len(df) * 100).round(1),
         'dtype' : df.dtypes
     }).sort_values('null_pct',ascending=False)
-    
+
+    cols_with_nulls = null_audit[null_audit['null_count'] > 0]
+
+    if len(cols_with_nulls) == 0:
+        print(f"\n No null remaining")
+    else:
+        print(f"\n      Columns with nulls ({len(cols_with_nulls)}):")
+        print(cols_with_nulls.to_string())
+
 if __name__ == '__main__':
     path = sys.argv[1] if len(sys.argv)>1 else RAW_PATH
 
