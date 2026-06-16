@@ -95,7 +95,7 @@ def load(path : str = RAW_PATH,sheet_name : int =0) -> pd.DataFrame:
     else:
         print(f"\n BORE_OIL_VAL column is missingg.")
 
-    ## Normalizing
+    ## Normalizing / -----------> Feature Engineering
     print(f"\n Normailizinf features.")
     print(f"normailizing oil Production to whole day.")
     
@@ -115,7 +115,13 @@ def load(path : str = RAW_PATH,sheet_name : int =0) -> pd.DataFrame:
         total_liq = df['BORE_OIL_VAL'] + df['BORE_WAT_VOL']
         df['WCT'] = df['BORE_WAT_VOL'] / total_liq.replace(0,np.nan)
         print(f"Water cut: BORE_WAT_VOL /(BORE_OIL_VOL + BORE_WAT_VOL)")
-        
+
+    ## presuure driving liquid to surface
+
+    if 'AVG_DOWNHOLE_PRESSURE' in df.columns  and 'AVG_WHP_P' in df.columns:
+        df['DRAWDOWN'] = df['AVG_DOWNHOLE_PRESSURE'] - df['AVG_WHP_P']
+        print(f"DRAWDOWN = AVG_DOWNHOLE_PRESSURE - AVG_WHP_P")
+    
 
 if __name__ == '__main__':
     path = sys.argv[1] if len(sys.argv)>1 else RAW_PATH
