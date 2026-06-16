@@ -49,6 +49,12 @@ def load(path : str = RAW_PATH,sheet_name : int =0) -> pd.DataFrame:
     else:
         print(f"\nALL EXPECTED COLUMNS ARE PRESENT")
 
+    ## Standardizing Date Column
+    if 'DATEPRD' in df.columns:
+        df['DATEPRD'] = pd.to_datetime(df['DATEPRD'], errors='coerce')
+        df = df.sort_values('DATEPRD').reset_index(drop=True)
+        print(f"Date range: {df['DATEPRD'].min().date()} → {df['DATEPRD'].max().date()}")
+
 if __name__ == '__main__':
     path = sys.argv[1] if len(sys.argv)>1 else RAW_PATH
 
