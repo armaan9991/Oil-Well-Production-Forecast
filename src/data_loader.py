@@ -31,8 +31,10 @@ def check_excel(path:str) -> None:
 ### we load excel file and return dataframe
 ### path = path to excel file
 ### sheet_name = 0 unless we specify any.
+
+
 def load(path : str = RAW_PATH,sheet_name : int =0) -> pd.DataFrame:
-    print("Reading Excel File")
+    print("STEP 1: Reading Excel File")
     df = pd.read_excel(path,sheet_name=sheet_name)
     # row and col, basiclly shape of data
     print(f"SHAPE OF DATE {df.shape[0]:,} rows {df.shape[1]} cols")
@@ -49,6 +51,8 @@ def load(path : str = RAW_PATH,sheet_name : int =0) -> pd.DataFrame:
     else:
         print(f"\nALL EXPECTED COLUMNS ARE PRESENT")
 
+    ## Step 2 Fix coloumn types -> Convert Date to datetime object, numeric values enforce them to be numeric..
+    print(f"\n Step 2: Fix coloumn types -> Convert Date to datetime object, numeric values enforce them to be numeric..")
     ## Standardizing Date Column
     if 'DATEPRD' in df.columns:
         df['DATEPRD'] = pd.to_datetime(df['DATEPRD'], errors='coerce')
@@ -64,7 +68,17 @@ def load(path : str = RAW_PATH,sheet_name : int =0) -> pd.DataFrame:
     for col in numeric_cols:
         if col in df.columns:
             df[col] = pd.to_numeric(df[col],errors='coerce')           ## 'coerce' means if invalid value means :NaN
-            
+
+    ## step 3: Filteing row
+    print("\n Filter Production ROW")
+    if 'FLOW_KIND' in df.columns:
+        counts = df['FLOW_KIND'].value_counts()
+        print(f"Flow Kind : \n{counts.to_string()}")
+        df =df[df['FLOW_KIND'].str.upper().str.strip() == 'PRODUCTION'].copy()
+        print(f"\n Production row count: {len(df):,} rows")
+    else:
+        print(f"\n FLOW_KIND column is missingg.")
+    
 
 if __name__ == '__main__':
     path = sys.argv[1] if len(sys.argv)>1 else RAW_PATH
