@@ -1,0 +1,28 @@
+Phase 1:
+check shape
+    .shape() , .head() , .tail()
+    .describe() = max/min/mean/std
+    .value_counts()  = to get unique value.
+Phase 2:
+check null Values
+    .isnull().sum() =  to sort by % missing , means  we will sort our coloumns based on missing %age.
+    #Visualize null patterns
+
+Phase 3
+why null Exists
+    sensor was shut or failed
+    never collected that data
+    reporting gap
+
+Phase 4
+so based on how much data is missing , and how important it is
+    if more than 60% is missing , then drop the coloumn
+    if label/target value was null, we can drop row once as it cant help model to learn but can be updated model is running
+    #impute
+
+Phase 5
+look for outliner in data
+    -> recheck for null value again once
+    -> detect any outliner
+    -> Scale compared to others
+
