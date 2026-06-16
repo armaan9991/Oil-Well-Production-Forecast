@@ -26,3 +26,8 @@ look for outliner in data
     -> detect any outliner
     -> Scale compared to others
 
+
+### data_loader.py
+    -> to read excel sheet, fix col types, filter production rows, drop rows where well was shut down
+    -> fix null problems, then save and clean 
+
