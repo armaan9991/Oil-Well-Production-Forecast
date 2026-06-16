@@ -95,6 +95,18 @@ def load(path : str = RAW_PATH,sheet_name : int =0) -> pd.DataFrame:
     else:
         print(f"\n BORE_OIL_VAL column is missingg.")
 
+    ## Normalizing
+    print(f"\n Normailizinf features.")
+    print(f"normailizing oil Production to whole day.")
+    
+    if  'BORE_OIL_VOL' in df.columns and 'ON_STREM_HRS' in df.columns:
+        df['OIL_RATE_NORM']= df['BORE_OIL_VOL'] / df['ON_STREM_HRS'] * 24
+        print(f"OIL_RATE NORM = BORE_OIL_VOL / ON_STREM_HRS * 24")
+    
+    if 'BORE_GAS_VOL' in df.columns and 'BORE_OIL_VOL' in df.columns:
+        df['GOR'] = df['BORE_GAS_VOL'] / df['BORE_OIL_VOL'].replace(0, np.nan)
+        print(f"\nGOR = BORE_GAS_VOL / BORE_OIL_VOL")
+
 if __name__ == '__main__':
     path = sys.argv[1] if len(sys.argv)>1 else RAW_PATH
 
