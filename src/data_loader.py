@@ -3,6 +3,7 @@ import  numpy as np
 import sys
 import os
 RAW_PATH = 'data/raw/data/Volve_production_data.xlsx'
+OUTPUT_PARQUET = 'data/processed/cleaned.parquet'
 
 # DATEPRD  = DAte of Production
 # NPD_WELL_BORE_NAME = Well Identifier
@@ -164,6 +165,12 @@ def load(path : str = RAW_PATH,sheet_name : int =0) -> pd.DataFrame:
             print(f"        {well:<20} {len(grp):>5} rows  "
                   f"oil avg: {grp['BORE_OIL_VOL'].mean():.1f} Sm³/day")
 
+    os.makedirs(os.path.dirname(OUTPUT_PARQUET), exist_ok=True)
+    df.to_parquet(OUTPUT_PARQUET,index=False)
+    print(f"\n      Saved → {OUTPUT_PARQUET}")
+    print(f"      Load next time with: pd.read_parquet('{OUTPUT_PARQUET}')")
+ 
+    return df
 
 if __name__ == '__main__':
     path = sys.argv[1] if len(sys.argv)>1 else RAW_PATH
