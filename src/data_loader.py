@@ -28,6 +28,27 @@ def check_excel(path:str) -> None:
         print(f"  First 3 rows:")
         print(preview.to_string(index=False))
 
+### we load excel file and return dataframe
+### path = path to excel file
+### sheet_name = 0 unless we specify any.
+def load(path : str = RAW_PATH,sheet_name : int =0) -> pd.DataFrame:
+    print("Reading Excel File")
+    df = pd.read_excel(path,sheet_name=sheet_name)
+    # row and col, basiclly shape of data
+    print(f"SHAPE OF DATE {df.shape[0]:,} rows {df.shape[1]} cols")
+    
+    # standardize col name by striping space.
+    df.columns = [c.strip().upper() for c in df.columns]
+
+
+    ## check if we are missing any of Expected coloumn
+    missing = [c for c in EXPECTED_COLS if c not in df.columns]
+    if missing:
+        print(f"\nExpected Column not found: {missing}")
+        print(f"\nColumns found : {df.columns}")
+    else:
+        print(f"\nALL EXPECTED COLUMNS ARE PRESENT")
+
 if __name__ == '__main__':
     path = sys.argv[1] if len(sys.argv)>1 else RAW_PATH
 
@@ -36,4 +57,6 @@ if __name__ == '__main__':
         sys.exit(1)
 
     
-    
+    check_excel(path)
+
+    df = load(path)
