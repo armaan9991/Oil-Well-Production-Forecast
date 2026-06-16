@@ -156,6 +156,15 @@ def load(path : str = RAW_PATH,sheet_name : int =0) -> pd.DataFrame:
             action = "liner interpolate"
         print(f"\n {col:<35} {pct:>5.1f}% -> {action}")
 
+    print(f"\nfinal summary")
+    print(f"CLEAN SHAPE: {df.shape[0]} , {df.shape[1]}")
+    if 'NPD_WELL_BORE_NAME' in df.columns:
+        print(f"      Wells: {df['NPD_WELL_BORE_NAME'].nunique()}")
+        for well, grp in df.groupby('NPD_WELL_BORE_NAME'):
+            print(f"        {well:<20} {len(grp):>5} rows  "
+                  f"oil avg: {grp['BORE_OIL_VOL'].mean():.1f} Sm³/day")
+
+
 if __name__ == '__main__':
     path = sys.argv[1] if len(sys.argv)>1 else RAW_PATH
 
