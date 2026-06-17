@@ -1,0 +1,113 @@
+C:\AG-DEV\Oil Well Production Forecast\src>python data_loader.py
+FILE : ../data/raw/Volve_production_data.xlsx
+
+ Sheet found (3) : ['Sheet1', 'Sheet2', 'Sheet3']
+
+--- Sheet: 'Sheet1' ---
+  Columns (16): ['DATEPRD', 'NPD_WELL_BORE_NAME', 'ON_STREAM_HRS', 'AVG_DOWNHOLE_PRESSURE', 'AVG_DOWNHOLE_TEMPERATURE', 'AVG_DP_TUBING', 'AVG_ANNULUS_PRESS', 'AVG_CHOKE_SIZE_P', 'AVG_WHP_P', 'AVG_WHT_P', 'DP_CHOKE_SIZE', 'BORE_OIL_VOL', 'BORE_GAS_VOL', 'BORE_WAT_VOL', 'BORE_WI_VOL', 'FLOW_KIND']
+  First 3 rows:
+  DATEPRD NPD_WELL_BORE_NAME  ON_STREAM_HRS  AVG_DOWNHOLE_PRESSURE  AVG_DOWNHOLE_TEMPERATURE  AVG_DP_TUBING  AVG_ANNULUS_PRESS  AVG_CHOKE_SIZE_P  AVG_WHP_P  AVG_WHT_P  DP_CHOKE_SIZE  BORE_OIL_VOL  BORE_GAS_VOL  BORE_WAT_VOL  BORE_WI_VOL  FLOW_KIND
+07-Apr-14         15/9-F-1 C              0                    0.0                       0.0            0.0                  0           0.00000          0          0              0             0             0             0          NaN production
+08-Apr-14         15/9-F-1 C              0                    NaN                       NaN            NaN                  0           1.00306          0          0              0             0             0             0          NaN production
+09-Apr-14         15/9-F-1 C              0                    NaN                       NaN            NaN                  0           0.97901          0          0              0             0             0             0          NaN production
+
+--- Sheet: 'Sheet2' ---
+  Columns (0): []
+  First 3 rows:
+Empty DataFrame
+Columns: []
+Index: []
+
+--- Sheet: 'Sheet3' ---
+  Columns (0): []
+  First 3 rows:
+Empty DataFrame
+Columns: []
+Index: []
+
+STEP 1: Reading Excel File
+SHAPE OF DATE 15,634 rows 16 cols
+
+ALL EXPECTED COLUMNS ARE PRESENT
+
+ Step 2: Fix coloumn types -> Convert Date to datetime object, numeric values enforce them to be numeric..
+C:\AG-DEV\Oil Well Production Forecast\src\data_loader.py:59: UserWarning: Could not infer format, so each element will be parsed individually, falling back to `dateutil`. To ensure parsing is consistent and as-expected, please specify a format.
+  df['DATEPRD'] = pd.to_datetime(df['DATEPRD'], errors='coerce')
+Date range: 2007-09-01 → 2016-12-01
+
+ Filter Production ROW
+Flow Kind : FLOW_KIND
+production    9161
+injection     6473
+
+ Production row count: 9,161 rows
+ Dropped 1,141 rows where well was shut.
+
+ dropped 0 rows where BORE_OIL_VAL is null
+
+ Normailizinf features.
+normailizing oil Production to whole day.
+
+OIL_RATE NORM = BORE_OIL_VOL / ON_STREAM_HRS * 24
+
+GOR = BORE_GAS_VOL / BORE_OIL_VOL
+Water cut: BORE_WAT_VOL /(BORE_OIL_VOL + BORE_WAT_VOL)
+DRAWDOWN = AVG_DOWNHOLE_PRESSURE - AVG_WHP_P
+  DAYS_ON_PROD   = days since first production)
+
+        null Audit
+
+      Columns with nulls (11):
+                          null_count  null_pct    dtype
+BORE_WI_VOL                     8012      99.9  float64
+AVG_ANNULUS_PRESS                951      11.9  float64
+DRAWDOWN                         144       1.8  float64
+AVG_DOWNHOLE_PRESSURE            144       1.8  float64
+AVG_DOWNHOLE_TEMPERATURE         144       1.8  float64
+AVG_DP_TUBING                    144       1.8  float64
+WCT                               14       0.2  float64
+GOR                               14       0.2  float64
+AVG_WHP_P                          3       0.0  float64
+DP_CHOKE_SIZE                      3       0.0  float64
+AVG_WHT_P                          3       0.0  float64
+
+ acions that can be taken:
+
+ BORE_WI_VOL                          99.9% -> can be dropped
+
+ AVG_ANNULUS_PRESS                    11.9% -> liner interpolate
+
+ DRAWDOWN                              1.8% -> liner interpolate
+
+ AVG_DOWNHOLE_PRESSURE                 1.8% -> sensor fault.
+
+ AVG_DOWNHOLE_TEMPERATURE              1.8% -> liner interpolate
+
+ AVG_DP_TUBING                         1.8% -> liner interpolate
+
+ WCT                                   0.2% -> liner interpolate
+
+ GOR                                   0.2% -> liner interpolate
+
+ AVG_WHP_P                             0.0% -> sensor fault.
+
+ DP_CHOKE_SIZE                         0.0% -> liner interpolate
+
+ AVG_WHT_P                             0.0% -> liner interpolate
+
+final summary
+CLEAN SHAPE: 8020 , 21
+      Wells: 6
+        15/9-F-1 C             438 rows  oil avg: 405.7 Sm³/day
+        15/9-F-11             1122 rows  oil avg: 1022.1 Sm³/day
+        15/9-F-12             2838 rows  oil avg: 1613.7 Sm³/day
+        15/9-F-14             2724 rows  oil avg: 1447.2 Sm³/day
+        15/9-F-15 D            769 rows  oil avg: 193.1 Sm³/day
+        15/9-F-5               129 rows  oil avg: 319.1 Sm³/day
+
+      Saved → ../data/processed/cleaned.parquet
+      Load next time with: pd.read_parquet('../data/processed/cleaned.parquet')
+
+============================================================
+Done. df is ready for EDA.
+============================================================
