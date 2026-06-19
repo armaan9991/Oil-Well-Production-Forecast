@@ -80,7 +80,7 @@ Planned analyses:
 
 ## Upcoming
 
-### ⏳ Phase 3 — Forecasting Models
+###  Phase 3 — Forecasting Models
 
 #### Arps Decline Curve Analysis
 
