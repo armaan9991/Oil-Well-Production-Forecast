@@ -1,1 +1,0 @@
-# arps decline curve baseline
