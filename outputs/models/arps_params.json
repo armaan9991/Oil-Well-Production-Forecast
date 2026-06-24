@@ -1,0 +1,56 @@
+{
+  "15/9-F-12": {
+    "peak_date": "2008-12-31",
+    "winner": "exponential",
+    "n_train_months": 73,
+    "n_test_months": 73,
+    "test_scores": {
+      "exponential": {
+        "RMSE": 312.7163,
+        "MAE": 265.984,
+        "R2": -1.4977
+      },
+      "hyperbolic": {
+        "RMSE": 447.2811,
+        "MAE": 399.9221,
+        "R2": -4.1097
+      }
+    },
+    "exponential_params": {
+      "qi": 5801.04,
+      "D": 0.046185
+    },
+    "hyperbolic_params": {
+      "qi": 5809.43,
+      "D": 0.046563,
+      "b": 0.01
+    }
+  },
+  "15/9-F-14": {
+    "peak_date": "2008-10-31",
+    "winner": "hyperbolic",
+    "n_train_months": 75,
+    "n_test_months": 75,
+    "test_scores": {
+      "exponential": {
+        "RMSE": 203.861,
+        "MAE": 203.5791,
+        "R2": -10.7034
+      },
+      "hyperbolic": {
+        "RMSE": 176.3491,
+        "MAE": 159.7588,
+        "R2": -7.7577
+      }
+    },
+    "exponential_params": {
+      "qi": 4338.71,
+      "D": 0.028986
+    },
+    "hyperbolic_params": {
+      "qi": 4344.1,
+      "D": 0.029195,
+      "b": 0.01
+    }
+  }
+}
